@@ -22,9 +22,7 @@
     "starter",
     "css-modules",
     "eslint",
-    "prettier",
-    "husky",
-    "commit-lint"
+    "prettier"
   ],
   "browserslist": [
     ">0.2%",
@@ -38,8 +36,7 @@
   "scripts": {
     "start": "vite",
     "build": "vite build",
-    "test": "jest",
-    "postinstall": "husky install"
+    "test": "jest"
   },
   "dependencies": {
     "@heroicons/react": "2.0.13",
