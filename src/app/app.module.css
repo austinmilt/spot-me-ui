@@ -6,6 +6,10 @@
   background-position: 0 0, 25px 25px;
   -webkit-animation: slide 2s linear infinite;
   animation: slide 4s linear infinite;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 @keyframes slide {
@@ -81,4 +85,15 @@
 
 .footer {
   @apply pb-16 max-w-screen-lg xl:max-w-screen-xl mx-auto text-center sm:text-right text-gray-400 font-bold;
+}
+
+.spotmeButton {
+  background-color: gray;
+  color: white;
+  border: 0.1rem solid white;
+  border-radius: 0.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
 }
