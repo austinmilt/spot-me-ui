@@ -101,3 +101,39 @@
 a {
   color: rgb(127, 171, 252);
 }
+
+.genre {
+  font-weight: bold;
+}
+
+.genreText {
+  color: rgb(127, 171, 252);
+  font-weight: bold;
+}
+
+.genre:hover {
+  cursor: pointer;
+}
+
+.genreCardPopup {
+  position: fixed;
+  width: 150px;
+}
+
+.genreCard {
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  gap: 0.25rem;
+  border-radius: 1rem;
+  background-color: rgb(33, 54, 92);
+}
+
+.genreCard>img {
+  width: 100%;
+  height: auto;
+  border-radius: 1rem;
+}

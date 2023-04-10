@@ -8,7 +8,25 @@ interface ApiResponse<T> {
 }
 
 
-export async function apiGetRecommendations(accessToken: string): Promise<string[]> {
+export interface GetRecommendationsResult {
+    recommendations: string[];
+    genres: {
+        [genre: string]: GenreMetadata
+    }
+}
+
+export interface GenreMetadata {
+    artists: GenreMetadataArtist[];
+}
+
+export interface GenreMetadataArtist {
+    name: string;
+    spotifyPageUrl: string;
+    imageUrl: string;
+}
+
+
+export async function apiGetRecommendations(accessToken: string): Promise<GetRecommendationsResult> {
     const params = new URLSearchParams();
     params.append("access_token", accessToken);
     const response: Response = await fetch(`${SPOTME_TOP_ITEMS_URL}?${params.toString()}`, {
