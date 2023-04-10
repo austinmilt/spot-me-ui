@@ -1,28 +1,19 @@
 {
   "name": "vital",
   "version": "1.0.0",
-  "description": "Starter template for Vite with React (TypeScript). Supports Tailwind with CSS-Modules. Jest and @react/testing-library configured and ready to go. Also ESLint, Prettier, Husky, Commit-lint and Atomic Design for components.",
-  "homepage": "https://github.com/jvidalv/vital#readme",
+  "description": "Frontend for Spot Me - recommendations for products based on your Spotify account.",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jvidalv/vital.git"
+    "url": "git+https://github.com/austinmilt/spot-me-ui.git"
   },
-  "author": "Josep Vidal <josepvidalvidal@gmail.com>",
+  "author": "Austin Milt <austin.w.milt@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jvidalv/vital/issues"
+    "url": "https://github.com/austinmilt/spot-me-ui/issues"
   },
   "keywords": [
-    "react",
-    "vite",
-    "typescript",
-    "jest",
-    "tailwind",
-    "template",
-    "starter",
-    "css-modules",
-    "eslint",
-    "prettier"
+    "spotify",
+    "chatGPT"
   ],
   "browserslist": [
     ">0.2%",
