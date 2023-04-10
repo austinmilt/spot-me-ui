@@ -3,38 +3,39 @@
 import {
   SpotifyAccessExpiredError,
   SpotifyInvalidAuthError,
-} from "../lib/error";
+} from "./error";
 import {
   SPOTIFY_ACCESS_TOKEN_URL,
   SPOTIFY_AUTH_REDIRECT_URL,
   SPOTIFY_AUTH_URL,
-} from "../lib/env";
+  SPOTIFY_CLIENT_ID,
+} from "./constants";
 
-export async function redirectToAuthCodeFlow(clientId: string) {
+export async function redirectToAuthCodeFlow() {
   const verifier = generateCodeVerifier(128);
   const challenge = await generateCodeChallenge(verifier);
 
   localStorage.setItem("verifier", verifier);
 
   const params = new URLSearchParams();
-  params.append("client_id", clientId);
+  params.append("client_id", SPOTIFY_CLIENT_ID);
   params.append("response_type", "code");
   params.append("redirect_uri", SPOTIFY_AUTH_REDIRECT_URL);
-  params.append("scope", "user-library-read");
+  params.append("scope", "user-library-read user-read-email");
   params.append("code_challenge_method", "S256");
   params.append("code_challenge", challenge);
 
   document.location = `${SPOTIFY_AUTH_URL}?${params.toString()}`;
 }
 
-export async function getAccessToken(clientId: string, code: string) {
+export async function getAccessToken(code: string) {
   const verifier = localStorage.getItem("verifier");
   if (verifier == null) {
     throw new Error("Missing required local storage: verifier");
   }
 
   const params = new URLSearchParams();
-  params.append("client_id", clientId);
+  params.append("client_id", SPOTIFY_CLIENT_ID);
   params.append("grant_type", "authorization_code");
   params.append("code", code);
   params.append("redirect_uri", SPOTIFY_AUTH_REDIRECT_URL);

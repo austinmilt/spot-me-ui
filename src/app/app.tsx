@@ -1,11 +1,12 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { getAccessToken, redirectToAuthCodeFlow } from "./authCodeWithPkce";
-import { SPOTIFY_CLIENT_ID, SPOTME_TOP_ITEMS_URL } from "../lib/env";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { getAccessToken, redirectToAuthCodeFlow } from "../lib/spotify";
 import styles from "./app.module.css";
 import {
   SpotifyAccessExpiredError,
   SpotifyInvalidAuthError,
+  SpotifyMemberNotAllowlistedError,
 } from "../lib/error";
+import { apiGetRecommendations } from "../lib/api";
 
 export default function App(): JSX.Element {
   //TODO move to provider
@@ -14,39 +15,33 @@ export default function App(): JSX.Element {
     []
   );
   const [accessToken, setAccessToken] = useState<string | undefined>();
-  const [recommendations, setRecommendations] = useState<
-    string[] | undefined
-  >();
+  const [recommendations, setRecommendations] = useState<string[] | undefined>();
   const [loading, setLoading] = useState<boolean>(false);
+  const [notAllowlisted, setNotAllowlisted] = useState<boolean>(true);
   const [error, setError] = useState<Error | undefined>();
 
   const onGenerateRecommendations = useCallback(() => {
     if (accessToken != null) {
-      //TODO move to API SDK
       setLoading(true);
-      const params = new URLSearchParams();
-      params.append("access_token", accessToken);
-      fetch(`${SPOTME_TOP_ITEMS_URL}?${params.toString()}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-      })
-        .then((response) => response.json())
-        .then((result) =>
-          setRecommendations((result as ApiRecommendationsResponse).result)
-        )
-        .catch()
+      setNotAllowlisted(false);
+      apiGetRecommendations(accessToken)
+        .then(setRecommendations)
+        .catch(e => {
+          if (e instanceof SpotifyMemberNotAllowlistedError) {
+            setNotAllowlisted(true);
+          } else {
+            setError(e);
+          }
+        })
         .finally(() => setLoading(false));
     }
   }, [accessToken]);
 
   useEffect(() => {
     if (authorizationCode != null) {
-      //TODO error handling, loading handling
       setLoading(true);
-      getAccessToken(SPOTIFY_CLIENT_ID, authorizationCode)
+      setNotAllowlisted(false);
+      getAccessToken(authorizationCode)
         .then(setAccessToken)
         .catch((e) => {
           if (e instanceof SpotifyAccessExpiredError) {
@@ -78,12 +73,20 @@ export default function App(): JSX.Element {
       >
         {loading && "Loading recommendations"}
         {!loading && recommendations != null && recommendations}
+        {!loading && notAllowlisted && (
+          <div>
+            Looks like you're not registered to use Spot Me. Get registered
+            by <GetRegisteredEmailLink>sending me an email</GetRegisteredEmailLink> with
+            your name and the email you used to register with Spotify. I'll send a response
+            email when you are registered.
+          </div>
+        )}
       </section>
       <section>
         {accessToken == null && (
           <button
             className={styles.spotmeButton}
-            onClick={() => redirectToAuthCodeFlow(SPOTIFY_CLIENT_ID)}
+            onClick={redirectToAuthCodeFlow}
           >
             Log in to Spotify
           </button>
@@ -102,6 +105,17 @@ export default function App(): JSX.Element {
   );
 }
 
-interface ApiRecommendationsResponse {
-  result: string[];
+
+const GET_REGISTERED_HREF: string = "mailto:austin.w.milt@gmail.com?" +
+  "subject=Spot Me Registration Request&" +
+  "body=" +
+  "[REPLACE WITH YOUR FIRST AND LAST NAME]%0D%0A" +
+  "[REPLACE WITH YOUR SPOTIFY EMAIL]";
+
+function GetRegisteredEmailLink(props: { children: React.ReactNode }): JSX.Element {
+  return (
+    <a href={GET_REGISTERED_HREF}>
+      {props.children}
+    </a>
+  )
 }
