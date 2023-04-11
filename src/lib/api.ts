@@ -12,7 +12,8 @@ export interface GetRecommendationsResult {
     recommendations: string[];
     genres: {
         [genre: string]: GenreMetadata
-    }
+    };
+    flierUrl: string;
 }
 
 export interface GenreMetadata {
