@@ -136,7 +136,7 @@ const GET_REGISTERED_HREF: string = "mailto:austin.w.milt@gmail.com?" +
 
 function GetRegisteredEmailLink(props: { children: React.ReactNode }): JSX.Element {
   return (
-    <a href={GET_REGISTERED_HREF}>
+    <a href={GET_REGISTERED_HREF} target="_blank" rel="noreferrer">
       {props.children}
     </a>
   )
